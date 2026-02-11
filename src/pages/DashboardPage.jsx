@@ -43,7 +43,7 @@ export default function DashboardPage({ bookings }) {
         </Sider>
 
         <Content style={contentStyle}>
-          {/* 🔙 Back button */}
+          {/* Back button */}
           <div>
             <Link to="/">
               <Button

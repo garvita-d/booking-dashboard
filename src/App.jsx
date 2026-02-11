@@ -4,7 +4,7 @@ import DashboardPage from "./pages/DashboardPage";
 import useBookings from "./hooks/useBookings";
 
 function App() {
-  const bookingState = useBookings(); // 🔑 SINGLE source of truth
+  const bookingState = useBookings();
 
   return (
     <Routes>

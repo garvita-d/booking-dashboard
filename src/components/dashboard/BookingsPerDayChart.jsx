@@ -12,28 +12,34 @@ import {
 
 export default function BookingsPerDayChart({ bookings }) {
   if (!bookings || bookings.length === 0) {
+    //if bookings is missing or empty, show a message instead of chart
     return <Card title="Bookings Per Day">No data available</Card>;
   }
 
   const bookingsPerDay = useMemo(() => {
-    const result = {};
+    // for booking changes
+    const result = {}; // empty object to store booking
 
     bookings.forEach((booking) => {
+      //convert date and format it
       const date = dayjs(booking.arrivalDate).format("YYYY-MM-DD");
 
       if (!result[date]) {
         result[date] = {
+          //create new object if its new for that date
           date,
           bookingCount: 0,
         };
       }
 
-      result[date].bookingCount += 1;
+      result[date].bookingCount += 1; //else increase the count of bookings if done on same date
     });
 
-    // ✅ sort by date so the line chart flows correctly
-    return Object.values(result).sort((a, b) =>
-      dayjs(a.date).diff(dayjs(b.date)),
+    return Object.values(result).sort(
+      (
+        a,
+        b, // for charts in ascending order
+      ) => dayjs(a.date).diff(dayjs(b.date)), //duration between 2 dates entered by user
     );
   }, [bookings]);
 
