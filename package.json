@@ -7,15 +7,20 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "convert-csv": "node scripts/convertCSV.mjs"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
     "antd": "^6.3.0",
+    "csv-parse": "^5.5.6",
     "dayjs": "^1.11.19",
+    "papaparse": "^5.5.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "recharts": "^3.7.0"
+    "react-router-dom": "^7.13.0",
+    "recharts": "^3.7.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

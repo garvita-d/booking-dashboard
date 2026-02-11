@@ -1,23 +1,22 @@
 import { Table, Button, Popconfirm } from "antd";
 import { useMemo, useCallback } from "react";
+import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
-export default function BookingTable({
-  bookings,
-  deleteBooking,
-  filterRange
-}) {
-
- 
+export default function BookingTable({ bookings, deleteBooking, filterRange }) {
   const processed = useMemo(() => {
-    return bookings.map(b => {
-      const duration = dayjs(b.end).diff(b.start, "day");
-      const total = duration * b.price;
-      return { ...b, duration, total };
+    return bookings.map((b) => {
+      const duration = dayjs(b.departureDate).diff(b.arrivalDate, "day");
+      const total = duration * b.pricePerDay;
+
+      return {
+        ...b,
+        duration,
+        total,
+      };
     });
   }, [bookings]);
 
-  
   const filtered = useMemo(() => {
     if (!filterRange || !filterRange[0] || !filterRange[1]) {
       return processed;
@@ -26,31 +25,31 @@ export default function BookingTable({
     const startFilter = filterRange[0];
     const endFilter = filterRange[1];
 
-    return processed.filter(b => {
-      const d = dayjs(b.start);
+    return processed.filter((b) => {
+      const date = dayjs(b.arrivalDate);
+
       return (
-        d.isSame(startFilter, "day") ||
-        d.isSame(endFilter, "day") ||
-        (d.isAfter(startFilter, "day") &&
-         d.isBefore(endFilter, "day"))
+        date.isSame(startFilter, "day") ||
+        date.isSame(endFilter, "day") ||
+        (date.isAfter(startFilter, "day") && date.isBefore(endFilter, "day"))
       );
     });
-
   }, [processed, filterRange]);
 
- 
-  const handleDelete = useCallback((id) => {
-    deleteBooking(id);
-  }, [deleteBooking]);
+  const handleDelete = useCallback(
+    (id) => {
+      deleteBooking(id);
+    },
+    [deleteBooking],
+  );
 
   const columns = [
-    { title: "Customer Name", dataIndex: "customer" },
-    { title: "Room Type", dataIndex: "room" },
-    { title: "Start Date", dataIndex: "start" },
-    { title: "End Date", dataIndex: "end" },
+    { title: "Customer Name", dataIndex: "customerName" },
+    { title: "Room Type", dataIndex: "roomType" },
+    { title: "Start Date", dataIndex: "arrivalDate" },
+    { title: "End Date", dataIndex: "departureDate" },
     { title: "Duration", dataIndex: "duration" },
-    { title: "Price Per Day", dataIndex: "price" },
-    { title: "Total Cost", dataIndex: "total" },
+    { title: "Price Per Day", dataIndex: "pricePerDay" },
     {
       title: "Action",
       render: (_, record) => (
@@ -60,15 +59,19 @@ export default function BookingTable({
         >
           <Button danger>Delete</Button>
         </Popconfirm>
-      )
-    }
+      ),
+    },
   ];
 
   return (
-    <Table
-      rowKey="id"
-      dataSource={filtered}
-      columns={columns}
-    />
+    <>
+      <Table rowKey="id" dataSource={filtered} columns={columns} />
+
+      <div style={{ marginTop: 16, textAlign: "right" }}>
+        <Link to="/dashboard">
+          <Button type="primary">Go to Dashboard</Button>
+        </Link>
+      </div>
+    </>
   );
 }

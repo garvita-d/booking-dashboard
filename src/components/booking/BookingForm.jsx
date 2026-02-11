@@ -9,11 +9,11 @@ export default function BookingForm({ addBooking }) {
   const onFinish = (values) => {
     const booking = {
       id: Date.now(),
-      customer: values.customer,
-      room: values.room,
-      start: dayjs(values.dates[0]).format("YYYY-MM-DD"),
-      end: dayjs(values.dates[1]).format("YYYY-MM-DD"),
-      price: values.price
+      customerName: values.customer,
+      roomType: values.room,
+      arrivalDate: dayjs(values.dates[0]).format("YYYY-MM-DD"),
+      departureDate: dayjs(values.dates[1]).format("YYYY-MM-DD"),
+      pricePerDay: values.price,
     };
 
     addBooking(booking);
@@ -22,7 +22,6 @@ export default function BookingForm({ addBooking }) {
 
   return (
     <Form layout="vertical" form={form} onFinish={onFinish}>
-
       <Form.Item
         label="Customer Name"
         name="customer"
@@ -31,23 +30,17 @@ export default function BookingForm({ addBooking }) {
         <Input />
       </Form.Item>
 
-      <Form.Item
-        label="Room Type"
-        name="room"
-        rules={[{ required: true }]}
-      >
-        <Select options={[
-          { value: "Standard" },
-          { value: "Deluxe" },
-          { value: "Suite" }
-        ]}/>
+      <Form.Item label="Room Type" name="room" rules={[{ required: true }]}>
+        <Select
+          options={[
+            { value: "Standard" },
+            { value: "Deluxe" },
+            { value: "Suite" },
+          ]}
+        />
       </Form.Item>
 
-      <Form.Item
-        label="Booking Date"
-        name="dates"
-        rules={[{ required: true }]}
-      >
+      <Form.Item label="Booking Date" name="dates" rules={[{ required: true }]}>
         <RangePicker />
       </Form.Item>
 
@@ -62,7 +55,6 @@ export default function BookingForm({ addBooking }) {
       <Button type="primary" htmlType="submit">
         Submit Booking
       </Button>
-
     </Form>
   );
 }
