@@ -8,7 +8,7 @@ export default function BookingTable({
   filterRange
 }) {
 
-  // ✅ calculate derived values
+ 
   const processed = useMemo(() => {
     return bookings.map(b => {
       const duration = dayjs(b.end).diff(b.start, "day");
@@ -17,7 +17,7 @@ export default function BookingTable({
     });
   }, [bookings]);
 
-  // ✅ SAFE filter (no plugins required)
+  
   const filtered = useMemo(() => {
     if (!filterRange || !filterRange[0] || !filterRange[1]) {
       return processed;
@@ -38,7 +38,7 @@ export default function BookingTable({
 
   }, [processed, filterRange]);
 
-  // ✅ delete handler
+ 
   const handleDelete = useCallback((id) => {
     deleteBooking(id);
   }, [deleteBooking]);
