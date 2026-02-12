@@ -1,57 +1,59 @@
 import { Card } from "antd";
 import { useMemo } from "react";
 import dayjs from "dayjs";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from "recharts";
+
+const COLORS = ["#f2b87b", "#f6cfa1", "#f9e0c3", "#e9a85f", "#d98c3a"];
 
 export default function BookingsPerDayChart({ bookings }) {
   if (!bookings || bookings.length === 0) {
-    //if bookings is missing or empty, show a message instead of chart
     return <Card title="Bookings Per Day">No data available</Card>;
   }
 
   const bookingsPerDay = useMemo(() => {
-    // for booking changes
-    const result = {}; // empty object to store booking
+    const result = {};
 
     bookings.forEach((booking) => {
-      //convert date and format it
       const date = dayjs(booking.arrivalDate).format("YYYY-MM-DD");
 
       if (!result[date]) {
         result[date] = {
-          //create new object if its new for that date
-          date,
-          bookingCount: 0,
+          name: date,
+          value: 0,
         };
       }
 
-      result[date].bookingCount += 1; //else increase the count of bookings if done on same date
+      result[date].value += 1;
     });
 
-    return Object.values(result).sort(
-      (
-        a,
-        b, // for charts in ascending order
-      ) => dayjs(a.date).diff(dayjs(b.date)), //duration between 2 dates entered by user
+    return Object.values(result).sort((a, b) =>
+      dayjs(a.name).diff(dayjs(b.name)),
     );
   }, [bookings]);
 
   return (
     <Card title="Bookings Per Day">
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={bookingsPerDay}>
-          <XAxis dataKey="date" />
-          <YAxis />
+        <PieChart>
+          <Pie
+            data={bookingsPerDay}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={100}
+            label
+          >
+            {bookingsPerDay.map((_, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+
           <Tooltip />
-          <Line type="monotone" dataKey="bookingCount" stroke="#f2b87b" />
-        </LineChart>
+        </PieChart>
       </ResponsiveContainer>
     </Card>
   );
